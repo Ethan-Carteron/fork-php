@@ -25,31 +25,35 @@ function generateSelectOptions($selected): string
     return $htmlGenerator;
 }
 
-$minuscules = [];
-if ($isMin == 1) {
-    $minuscules = range ("a", "z");
+function creationListes(int $isMin, int $isMaj, int $isNum, int $isSpe):array {
+
+    $minuscules = [];
+    if ($isMin == 1) {
+        $minuscules = range ("a", "z");
+    }
+
+    $majuscules = [];
+    if ($isMaj == 1) {
+        $majuscules = range ("A", "Z");
+    }
+
+    $chiffres = [];
+    if ($isNum == 1) {
+        $chiffres = range (0,9);
+    }
+
+    $caracteresSpeciaux = [];
+    if ($isSpe == 1) {
+        $caracteresSpeciaux = [
+            '!', '@', '#', '$', '%', '^', '&', '*', '(', ')',
+            '-', '_', '+', '=', '{', '}', '[', ']', ':', ';',
+            '<', '>', ',', '.', '?', '/', '|', '~', '`'
+        ];
+    }
+    return $minuscules + $majuscules + $chiffres + $caracteresSpeciaux;
 }
 
-$majuscules = [];
-if ($isMaj == 1) {
-    $majuscules = range ("A", "Z");
-}
-
-$chiffres = [];
-if ($isNum == 1) {
-    $chiffres = range (0,9);
-}
-
-$caracteresSpeciaux = [];
-if ($isSpe == 1) {
-    $caracteresSpeciaux = [
-        '!', '@', '#', '$', '%', '^', '&', '*', '(', ')',
-        '-', '_', '+', '=', '{', '}', '[', ']', ':', ';',
-        '<', '>', ',', '.', '?', '/', '|', '~', '`'
-    ];
-}
-
-$fullTab = array_merge($minuscules, $majuscules, $chiffres, $caracteresSpeciaux);
+$fullTab = creationListes($isMin, $isMaj, $isNum, $isSpe);
 
 $listeOptions = generateSelectOptions($size);
 
