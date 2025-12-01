@@ -30,21 +30,25 @@ $allAlbumsArtist = [];
 try {
 
     $albumInfos = $db->executeQuery(<<<SQL
-        SELECT *
+        SELECT album.*,
+               artist.name AS artist_name, 
+               artist.cover AS artist_cover,
+               artist.id AS artist_id
         FROM album
         INNER JOIN artist ON album.artist_id = artist.id
         WHERE album.id = $albumId
     SQL);
 
     if (count($albumInfos) == 0) {
-        header('Location: error.php?message=Artiste introuvable');
+        header('Location: error.php?message=Album introuvable');
         exit;
     }
 
     $albumSongs = $db->executeQuery(<<<SQL
-        SELECT name, duration, note, album_id
+        SELECT song.name, song.duration, song.note, song.album_id
         FROM song
-        WHERE song.album_id = $albumId
+        INNER JOIN album ON song.album_id = album.id
+        WHERE album.id = $albumId
     SQL);
 
 } catch (PDOException $ex) {
@@ -52,29 +56,18 @@ try {
     exit;
 }
 
-$artist = $artistInfos[0];
-$artistName = $artist['name'];
-$artistBio = $artist['biography'];
-$artistCover = $artist['cover'];
-
-$artistListeners = "";
-if ($artist['monthly_listeners'] > 1000) {
-    if ($artist['monthly_listeners'] > 1000000) {
-        $formatListeners = (int)($artist['monthly_listeners'] / 1000000);
-        $artistListeners .= $formatListeners . "m";
-    } else {
-        $formatListeners = (int)($artist['monthly_listeners'] / 1000);
-        $artistListeners .= $formatListeners . "k";
-    }
-} else {
-    $artistListeners = $artist['monthly_listeners'];
-}
+$album = $albumInfos[0];
+$albumName = $album['name'];
+$artistName = $album['artist_name'];
+$cover = $album['cover'];
+$releaseDate = $album['release_date'];
+$artistId = $album['artist_id'];
+$artistCover = $album['artist_cover'];
 
 $songsAsHTML = "";
 
-foreach ($topSongArtist as $song) {
+foreach ($albumSongs as $song) {
     $name = $song['name'];
-    $cover = $song['cover'];
     $minutes = (int)($song['duration'] / 60);
     $seconds = $song['duration'] % 60;
     $note = $song['note'];
@@ -83,35 +76,24 @@ foreach ($topSongArtist as $song) {
     }
 
     $songsAsHTML .= <<<HTML
-    <div class="song-row">
-        <img src="$cover" class="song-cover" alt="Cover">
-        <span class="song-title">$name</span>
-        <span class="song-note">$note/5</span>
-        <span class="song-duration">$minutes:$seconds</span>
-    </div>
-HTML;
+        <div class="song-row">
+            <img src="$cover" class="song-cover" alt="Cover">
+            <span class="song-title">$name</span>
+            <span class="song-note">$note/5</span>
+            <span class="song-duration">$minutes:$seconds</span>
+        </div>
+    HTML;
 }
 
-$albumsAsHTML = "";
 
-foreach ($allAlbumsArtist as $album) {
-    $id = $album['id'];
-    $name = $album['name'];
-    $cover = $album['cover'];
-    $year = $album['release_date'];
-
-    $albumsAsHTML .= <<<HTML
-    <a href="album.php?id=$id" class="album-card">
-        <div class="album-cover-container">
-            <img src="$cover" alt="Cover de $name" class="album-img">
-        </div>
-        <div class="album-info">
-            <h4 class="album-name">$name</h4>
-            <span class="album-year">$year</span>
+$artistAsHTML = <<<HTML
+    <a href="artist.php?id=$artistId" class="album-card">
+        <img src="$artistCover" alt="$artistName" class="header-cover">
+        <div class="header-details">
+            <h1>$artistName</h1>
         </div>
     </a>
 HTML;
-}
 
 $pageTitle = "$artistName - Lowify";
 $htmlContent = <<<HTML
@@ -122,23 +104,26 @@ $htmlContent = <<<HTML
             </nav>
     
             <div class="artist-header">
-                <img src="$artistCover" alt="$artistName" class="header-cover">
-                <div class="header-details">
-                    <h1>$artistName</h1>
-                    <span class="listeners">$artistListeners auditeurs par mois</span>
-                    <p class="bio">$artistBio</p>
+                {$artistAsHTML}
+            </div>
+            
+            <h2 class="section-title">Discographie</h2>
+            <div class="albums-grid">
+                <div class="album-cover-container">
+                    <img src="$cover" alt="Cover de $name" class="album-img">
+                </div>
+                <div class="album-info">
+                    <h4 class="album-name">$name</h4>
+                    <span class="album-year">$releaseDate</span>
                 </div>
             </div>
-    
+            
             <h2 class="section-title">Populaires</h2>
             <div class="song-list">
                 {$songsAsHTML}
             </div>
     
-            <h2 class="section-title">Discographie</h2>
-            <div class="albums-grid">
-                {$albumsAsHTML}
-            </div>
+
         </div>
     </div>
 HTML;
@@ -204,7 +189,7 @@ $customCSS = <<<CSS
     .song-duration { color: #a7a7a7; font-size: 13px; margin-right: 10px; }
 CSS;
 
-$page = new HTMLPage(title: $pageTitle);
+$page = new HTMLPage($pageTitle);
 $page->addRawStyle($customCSS);
 $page->addContent($htmlContent);
 echo $page->render();

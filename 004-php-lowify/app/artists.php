@@ -19,7 +19,10 @@ $pageTitle = "";
 
 $allArtists = [];
 try {
-    $allArtists = $db->executeQuery(query: "SELECT id, name, cover FROM artist");
+    $allArtists = $db->executeQuery(<<<SQL
+                                    SELECT id, name, cover
+                                    FROM artist
+    SQL);
 } catch (PDOException $ex) {
     echo "Erreur requête : " . $ex->getMessage();
     exit;
@@ -123,7 +126,7 @@ $customCSS = <<<CSS
     .song-duration { color: #a7a7a7; font-size: 13px; margin-right: 10px; }
 CSS;
 
-$page = new HTMLPage(title: $pageTitle);
+$page = new HTMLPage($pageTitle);
 $page->addRawStyle($customCSS);
 $page->addContent($htmlContent);
 echo $page->render();

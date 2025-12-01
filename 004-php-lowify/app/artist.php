@@ -29,7 +29,7 @@ $allAlbumsArtist = [];
 
 try {
     $artistInfos = $db->executeQuery(<<<SQL
-        SELECT name, biography, cover, monthly_listeners 
+        SELECT *
         FROM artist
         WHERE id = $artistId
     SQL
@@ -41,7 +41,7 @@ try {
     }
 
     $topSongArtist = $db->executeQuery(<<<SQL
-        SELECT song.id, song.name, song.duration, song.note, album.cover
+        SELECT song.*, album.cover
         FROM song
         INNER JOIN album ON song.album_id = album.id
         WHERE song.artist_id = $artistId
@@ -51,7 +51,7 @@ try {
     );
 
     $allAlbumsArtist = $db->executeQuery(<<<SQL
-        SELECT id, name, cover, release_date 
+        SELECT *
         FROM album
         WHERE album.artist_id = $artistId
         ORDER BY release_date DESC
@@ -94,13 +94,13 @@ foreach ($topSongArtist as $song) {
     }
 
     $songsAsHTML .= <<<HTML
-    <div class="song-row">
-        <img src="$cover" class="song-cover" alt="Cover">
-        <span class="song-title">$name</span>
-        <span class="song-note">$note/5</span>
-        <span class="song-duration">$minutes:$seconds</span>
-    </div>
-HTML;
+        <div class="song-row">
+            <img src="$cover" class="song-cover" alt="Cover">
+            <span class="song-title">$name</span>
+            <span class="song-note">$note/5</span>
+            <span class="song-duration">$minutes:$seconds</span>
+        </div>
+    HTML;
 }
 
 $albumsAsHTML = "";
@@ -215,7 +215,7 @@ $customCSS = <<<CSS
     .song-duration { color: #a7a7a7; font-size: 13px; margin-right: 10px; }
 CSS;
 
-$page = new HTMLPage(title: $pageTitle);
+$page = new HTMLPage($pageTitle);
 $page->addRawStyle($customCSS);
 $page->addContent($htmlContent);
 echo $page->render();
