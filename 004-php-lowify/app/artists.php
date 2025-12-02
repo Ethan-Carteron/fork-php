@@ -20,8 +20,8 @@ $pageTitle = "";
 $allArtists = [];
 try {
     $allArtists = $db->executeQuery(<<<SQL
-                                    SELECT id, name, cover
-                                    FROM artist
+        SELECT *
+        FROM artist
     SQL);
 } catch (PDOException $ex) {
     echo "Erreur requête : " . $ex->getMessage();

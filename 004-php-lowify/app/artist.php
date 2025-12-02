@@ -32,10 +32,9 @@ try {
         SELECT *
         FROM artist
         WHERE id = $artistId
-    SQL
-    );
+    SQL);
 
-    if (count($artistInfos) == 0) {
+    if (empty($artistInfos)) {
         header('Location: error.php?message=Artiste introuvable');
         exit;
     }
@@ -45,18 +44,16 @@ try {
         FROM song
         INNER JOIN album ON song.album_id = album.id
         WHERE song.artist_id = $artistId
-        ORDER BY song.note DESC 
+        ORDER BY song.note DESC
         LIMIT 5
-    SQL
-    );
+    SQL);
 
     $allAlbumsArtist = $db->executeQuery(<<<SQL
         SELECT *
         FROM album
         WHERE album.artist_id = $artistId
         ORDER BY release_date DESC
-    SQL
-    );
+    SQL);
 
 } catch (PDOException $ex) {
     echo "Erreur requête : " . $ex->getMessage();

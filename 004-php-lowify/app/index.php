@@ -124,7 +124,7 @@ $htmlContent = <<<HTML
                     <form action="search.php" method="GET" class="search-form">
                         <input 
                             type="text" 
-                            name="query" 
+                            name="query"
                             placeholder="Rechercher un artiste, un album, un titre..." 
                             class="search-input"
                             required
