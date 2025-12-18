@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container-fluid d-flex flex-column min-vh-100">
+        <div class="d-flex flex-grow-1">
+        {# menu #}
+        {% include '_components/menu.html.twig' %}
+
+        {# contenu #}
+        <div class="container-fluid p-4">
+        {% block content %}{% endblock %}
+        </div>
+        </div>
+
+    </div>
+{% endblock %}

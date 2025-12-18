@@ -1,0 +1,36 @@
+{% set current_route = app.current_route %}
+
+<div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 250px; height: 100vh;">
+    <div class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-decoration-none">
+        <span class="fs-4">Bricount</span>
+    </div>
+    <hr>
+    <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+            <a
+                href="{{ path("wallets_list") }}"
+                class="nav-link {% if "wallets" in current_route %}active{% endif %}"
+            >
+                Portefeuilles
+            </a>
+        </li>
+        <li>
+            <a
+                href="{{ path("settings") }}"
+                class="nav-link {% if "settings" in current_route %}active{% endif %}"
+            >
+                Paramètres
+            </a>
+        </li>
+    </ul>
+    <div class="mt-auto">
+        <hr>
+
+        <div class="d-flex align-items-center mb-2">
+            Utilisateur : {{ app.user.email }}
+        </div>
+        <a href="{{ path("app_logout") }}" class="btn btn-outline-danger w-100" type="button">
+            Déconnexion
+        </a>
+    </div>
+</div>
