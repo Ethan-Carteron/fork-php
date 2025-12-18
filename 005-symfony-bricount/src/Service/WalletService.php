@@ -4,12 +4,15 @@ namespace App\Service;
 
 use App\Entity\User;
 use App\Entity\Wallet;
+use App\Entity\XUserWallet;
 use App\Repository\WalletRepository;
+use App\Repository\XUserWalletRepository;
 
 class WalletService
 {
     public function __construct(
-        private readonly WalletRepository $walletRepository
+        private readonly WalletRepository $walletRepository,
+        private readonly XUserWalletRepository $xUserWalletRepository
     )
     {
     }
@@ -18,7 +21,7 @@ class WalletService
         return $this->walletRepository->findWalletsForUser($user);
     }
 
-    public function getUserAccessOnWallet(User $user, Wallet $wallet): int {
+    public function getUserAccessOnWallet(User $user, Wallet $wallet): null|XUserWallet {
         $xUserWallet = null;
 
         try {

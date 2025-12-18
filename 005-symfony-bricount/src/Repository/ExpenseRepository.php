@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Expense;
+use App\Entity\Wallet;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,14 +20,24 @@ class ExpenseRepository extends ServiceEntityRepository
     public function findExpensesForWallet(Wallet $wallet, int $page, int $limit): array {
         return
             $this
-                ->createQueryBuilder("a")
-                ->innerJoin("e.wallet", "w", "WITH", "w.is_deleted = false AND w.id = :walletId")
-                ->andWhere("e.is_deleted = false")
+                ->createQueryBuilder("e")
+                ->innerJoin("e.wallet", "w", "WITH", "w.isDeleted = false AND w.id = :walletId")
+                ->andWhere("e.isDeleted = false")
                 ->orderBy ("e.createdDate", "DESC")
                 ->setMaxResults($limit)
                 ->setFirstResult(($page - 1) * $limit)
                 ->setParameter("walletId", $wallet->getId())
                 ->getQuery()
                 ->getResult();
+    }
+
+
+    public function countExpensesForWallet(Wallet $wallet): int
+    {
+        return
+            $this->count([
+                "wallet" => $wallet,
+                "isDeleted" => false
+            ]);
     }
 }

@@ -5,7 +5,8 @@ namespace App\Repository;
 use App\Entity\XUserWallet;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-
+use App\Entity\User;
+use App\Entity\Wallet;
 
 class XUserWalletRepository extends ServiceEntityRepository
 {

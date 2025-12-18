@@ -5,4 +5,6 @@ FROM "user";
 
 UPDATE xuser_wallet
 SET is_deleted = false
-WHERE target_user_id = 5;
+WHERE target_user_id = 21;
+
+
