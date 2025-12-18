@@ -8,7 +8,7 @@
     <ul>
     {% for wallet in wallets %}
         <li>
-            <a href="{{ path('wallets_show', {'id': wallet.id}) }}">{{ wallet.label }}</a>
+            <a href="{{ path('wallets_show', {'uid': wallet.uid}) }}">{{ wallet.label }}</a>
         </li>
     {% endfor %}
     </ul>
