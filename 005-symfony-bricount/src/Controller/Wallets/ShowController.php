@@ -29,6 +29,20 @@ final class ShowController extends AbstractController
         // 2. transformer  l'ID du wallet, en wallet objet
 
         // 3. faire la vérification d'accès via le WalletService
+        $xUserWallet = $walletService->getUserAccessOnWallet($connectedUser, $wallet);
+
+        // si l'utilisateur courant n'a oas acccès au wallet avec un message d'erreur
+        // pour savoir s'il à accès, vérifier que $xUser n'est pas null
+
+        if (true === is_null($xUserWallet)) {
+            // vu que xUserWallet est null, on vire le user
+
+            // 1. setup un message d'erreur
+            $this->addFlash("error", "vous n'avez pas accès ) ce portefeuille");
+
+            // 2. rediriger vers la liste des wallets
+            return $this->redirectToRoute('wallets_list');
+        }
 
 
 
