@@ -29,4 +29,8 @@ class WalletService
         } catch (\Exception $e) {}
         return $xUserWallet;
     }
+    public function createWallet(WalletDTO $dto, User $owner): Wallet
+    {
+        
+    }
 }
