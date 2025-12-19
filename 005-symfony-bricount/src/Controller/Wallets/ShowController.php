@@ -34,7 +34,7 @@ final class ShowController extends AbstractController
         // 3. faire la vérification d'accès via le WalletService
         $xUserWallet = $walletService->getUserAccessOnWallet($connectedUser, $wallet);
 
-        // si l'utilisateur courant n'a oas acccès au wallet avec un message d'erreur
+        // si l'utilisateur courant n'a pas acccès au wallet avec un message d'erreur
         // pour savoir s'il à accès, vérifier que $xUser n'est pas null
 
         if (true === is_null($xUserWallet)) {
